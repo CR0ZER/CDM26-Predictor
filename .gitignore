@@ -1,0 +1,16 @@
+# Environnement
+.env
+cdm_venv/
+__pycache__/
+*.pyc
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Données brutes (remplacées par data/processed, dépendent de sources externes fragiles)
+data/raw/
+
+# OS
+.DS_Store
+Thumbs.db

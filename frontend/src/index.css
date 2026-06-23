@@ -1,0 +1,301 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  --pitch-dark: #0B3D2E;
+  --pitch-darker: #082C21;
+  --chalk: #F5F3EC;
+  --amber: #F2A93B;
+  --home-blue: #3B6FD6;
+  --away-red: #D14B4B;
+  --sage: #8FAE9C;
+
+  --font-display: 'Oswald', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--pitch-dark);
+  color: var(--chalk);
+  font-family: var(--font-body);
+}
+
+.app-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.app-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 0.5rem;
+}
+
+.app-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0 0 2rem;
+  letter-spacing: 0.02em;
+}
+
+.match-select-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.match-select-row select {
+  flex: 1;
+  min-width: 240px;
+  background: var(--pitch-darker);
+  color: var(--chalk);
+  border: 1px solid var(--sage);
+  border-radius: 4px;
+  padding: 0.6rem 0.8rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+}
+
+.match-select-row button {
+  background: var(--amber);
+  color: var(--pitch-darker);
+  border: none;
+  border-radius: 4px;
+  padding: 0.6rem 1.4rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.match-select-row button:disabled {
+  background: var(--sage);
+  cursor: not-allowed;
+}
+
+.scoreboard {
+  background: var(--pitch-darker);
+  border-top: 3px solid var(--amber);
+  border-radius: 4px;
+  padding: 2rem 1.5rem;
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.scoreboard-teams {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  font-family: var(--font-display);
+}
+
+.scoreboard-team {
+  flex: 1;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.scoreboard-team.home { color: var(--home-blue); text-align: right; }
+.scoreboard-team.away { color: var(--away-red); text-align: left; }
+
+.scoreboard-score {
+  font-size: 3rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--amber);
+  min-width: 120px;
+}
+
+.scoreboard-probs {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--sage);
+}
+
+.panel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.panel-grid > .panel-full { grid-column: 1 / -1; }
+
+.panel {
+  background: var(--pitch-darker);
+  border-top: 2px solid var(--sage);
+  border-radius: 4px;
+  padding: 1.25rem;
+}
+
+.panel h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 1rem;
+  color: var(--chalk);
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(11, 61, 46, 0.35);
+  border-top-color: var(--pitch-darker);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 640px) {
+  .panel-grid { grid-template-columns: 1fr; }
+  .scoreboard-teams { flex-direction: column; gap: 0.5rem; }
+  .scoreboard-team.home, .scoreboard-team.away { text-align: center; }
+}
+
+.day-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.day-nav button {
+  background: var(--pitch-darker);
+  color: var(--chalk);
+  border: 1px solid var(--sage);
+  border-radius: 4px;
+  width: 36px;
+  height: 36px;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.day-nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.day-label {
+  font-family: var(--font-display);
+  text-transform: capitalize;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+  min-width: 220px;
+  text-align: center;
+}
+
+.predict-day-btn {
+  display: block;
+  margin: 0 auto 2rem;
+  background: var(--amber);
+  color: var(--pitch-darker);
+  border: none;
+  border-radius: 4px;
+  padding: 0.7rem 1.6rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.predict-day-btn:disabled { background: var(--sage); cursor: not-allowed; }
+
+.match-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.match-card {
+  background: var(--pitch-darker);
+  border: 1px solid rgba(245, 243, 236, 0.08);
+  border-left: 3px solid var(--sage);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.match-card:hover { border-left-color: var(--amber); }
+
+.match-card-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--sage);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+.match-card-main {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem 1rem;
+  cursor: pointer;
+}
+
+.match-card-team {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.match-card-team.away { justify-content: flex-end; text-align: right; }
+
+.match-card-score {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--amber);
+  min-width: 70px;
+  text-align: center;
+}
+
+.match-card-chevron { font-size: 1.3rem; color: var(--sage); transition: transform 0.15s; }
+.match-card-chevron.open { transform: rotate(90deg); }
+
+.match-card-expanded {
+  padding: 0 1rem 1.25rem;
+  border-top: 1px solid rgba(245, 243, 236, 0.08);
+}
+
+.predict-single-btn {
+  display: block;
+  margin: 1rem auto 0;
+  background: transparent;
+  color: var(--amber);
+  border: 1px solid var(--amber);
+  border-radius: 4px;
+  padding: 0.5rem 1.2rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+}
