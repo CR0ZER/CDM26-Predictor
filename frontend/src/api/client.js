@@ -1,7 +1,7 @@
 const API_BASE_URL = "http://127.0.0.1:8000/api";
 
 export async function getUpcomingMatches() {
-  const res = await fetch(`${API_BASE_URL}/matches`);
+  const res = await fetch(`${API_BASE_URL}/matches`, { cache: "no-store" });
   if (!res.ok) throw new Error("Erreur lors de la récupération des matchs");
   return res.json();
 }
