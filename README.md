@@ -36,11 +36,12 @@ The project goes beyond a simple 1X2 model (win/draw/loss): it directly models e
 
 ## Features
 
-- 📅 Day-by-day navigation through the 2026 World Cup schedule (upcoming and completed matches, fetched live)
-- ⚽ Predict a single match or an entire matchday in one click
-- 📊 1X2 probabilities, full exact-score grid (heatmap), over/under 2.5 goals, BTTS (both teams to score)
-- 🏳️ Match cards with flags, organized by matchday in a Sofascore-style layout
-- 🔄 Home-advantage handling for the three co-host nations (USA, Mexico, Canada)
+- Day-by-day navigation through the 2026 World Cup schedule (upcoming and completed matches, fetched live)
+- Predict a single match or an entire matchday in one click
+- 1X2 probabilities, full exact-score grid (heatmap), over/under 2.5 goals, BTTS (both teams to score)
+- Match cards with flags, organized by matchday in a Sofascore-style layout
+- Home-advantage handling for the three co-host nations (USA, Mexico, Canada)
+- Live model performance tracking — outcome accuracy and exact-score accuracy updated after each matchday
 
 ## Tech Stack
 
@@ -65,9 +66,11 @@ Evaluated on the 2022 World Cup matches (64 games), used as a temporal test set 
 | Improvement | **-13.2%** | **-17.9%** |
 
 Feature importance analysis shows that the Elo ranking (differential + absolute values) accounts for roughly 70% of the model's predictive power, ahead of recent form and head-to-head history.
+ 
+Live performance on the 2026 World Cup (updated throughout the tournament) is tracked directly in the app via the **Model Stats** panel.
 
 ## Architecture
-
+ 
 ```
 data sources (Kaggle, Elo, football-data.org)
         │
@@ -78,10 +81,13 @@ data sources (Kaggle, Elo, football-data.org)
   models (Dixon-Coles baseline + XGBoost)
         │
         ▼
-   FastAPI (/api/matches, /api/predict)
+   FastAPI (/api/matches, /api/predict, /api/backtest, /api/backtest/refresh)
         │
         ▼
-   React (match cards, stats, heatmap)
+   React (match cards, stats heatmap, live model performance panel)
+        │
+        ▼
+   predictions_store.json (persistent prediction log)
 ```
 
 ## Installation
@@ -129,6 +135,11 @@ npm run dev
 ```
 → App at `http://localhost:5173`
 
+**Seed the prediction store** (first-time setup, populates past World Cup matches):
+```bash
+python -m src.models.seed_store
+```
+
 **To regenerate the full pipeline** (optional):
 ```bash
 python src/data/download.py
@@ -143,7 +154,9 @@ python -m src.models.train_xgb      # main model
 | Method | Endpoint | Description |
 |---|---|---|
 | `GET` | `/api/matches` | Match schedule (upcoming and finished) |
-| `POST` | `/api/predict` | Full prediction (1X2, score grid, over/under 2.5, BTTS) |
+| `POST` | `/api/predict` | Full prediction (1X2, score grid, over/under 2.5, BTTS) — auto-saved to store |
+| `GET` | `/api/backtest` | Model performance stats computed from the prediction store |
+| `POST` | `/api/backtest/refresh` | Fetch real scores for pending predictions and update the store |
 
 ## Data Sources
 
@@ -156,6 +169,7 @@ python -m src.models.train_xgb      # main model
 - Elo ratings are not refreshed automatically during the tournament (requires manual re-scraping)
 - Home-advantage handling for co-host nations relies on a heuristic (team identity), not the actual match venue — a deliberate choice after observing that pure geography doesn't reflect real crowd support (e.g. Mexico, whose fans travel in large numbers to matches played in the United States)
 - No feature based on squad market value or player ratings: the historical data needed (exact lineup per match, over 25 years) isn't reliably available in a structured form
+- Past World Cup matches seeded via `seed_store.py` are computed retrospectively, not predicted in real time
 
 ## License
 
