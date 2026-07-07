@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.api.routers import predict, matches
+from src.api.routers import predict, matches, backtest
 
 
 app = FastAPI(title="CdM 2026 Predictor API")
@@ -14,6 +14,7 @@ app.add_middleware(
 
 app.include_router(predict.router, prefix="/api", tags=["predict"])
 app.include_router(matches.router, prefix="/api", tags=["matches"])
+app.include_router(backtest.router, prefix="/api", tags=["backtest"])
 
 
 @app.get("/health")

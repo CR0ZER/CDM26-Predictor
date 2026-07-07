@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { getUpcomingMatches, predictMatch } from "./api/client";
 import MatchCard from "./components/MatchCard";
+import BacktestModal from "./components/BacktestModal";
 
 function App() {
   const [matches, setMatches] = useState([]);
@@ -9,6 +10,7 @@ function App() {
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
   const [isPredictingDay, setIsPredictingDay] = useState(false);
   const [error, setError] = useState(null);
+  const [showBacktest, setShowBacktest] = useState(false);
 
   useEffect(() => {
     getUpcomingMatches().then(setMatches).catch((e) => setError(e.message));
@@ -65,7 +67,28 @@ function App() {
   return (
     <div className="app-container">
       <div className="app-eyebrow">Florian Huillet</div>
-      <h1 className="app-title">Prédicteur Coupe du Monde 2026</h1>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
+        <h1 className="app-title" style={{ margin: 0 }}>Prédicteur Coupe du Monde 2026</h1>
+        <button
+          onClick={() => setShowBacktest(true)}
+          style={{
+            background: "transparent",
+            border: "1px solid var(--sage)",
+            color: "var(--sage)",
+            borderRadius: 4,
+            padding: "0.5rem 1rem",
+              fontFamily: "var(--font-mono)",
+            fontSize: "0.75rem",
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+            cursor: "pointer",
+          }}
+        >
+          Stats du modèle
+        </button>
+      </div>
+
+      {showBacktest && <BacktestModal onClose={() => setShowBacktest(false)} />}
 
       {error && <p style={{ color: "var(--away-red)" }}>{error}</p>}
 
