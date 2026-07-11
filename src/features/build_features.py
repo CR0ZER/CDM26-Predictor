@@ -47,22 +47,35 @@ def compute_team_form(df: pd.DataFrame, n: int = FORM_WINDOW) -> pd.DataFrame:
     long = long.sort_values(["team", "date"]).reset_index(drop=True)
 
     grp = long.groupby("team")
-    long["form_scored"]   = grp["scored"].transform(lambda x: x.shift(1).rolling(n, min_periods=1).mean())
-    long["form_conceded"] = grp["conceded"].transform(lambda x: x.shift(1).rolling(n, min_periods=1).mean())
-    long["form_win_rate"] = grp["win"].transform(lambda x: x.shift(1).rolling(n, min_periods=1).mean())
+    long["form_scored"]   = grp["scored"].transform(
+        lambda x: x.shift(1).ewm(span=n, min_periods=1).mean()
+    )
+    long["form_conceded"] = grp["conceded"].transform(
+        lambda x: x.shift(1).ewm(span=n, min_periods=1).mean()
+    )
+    long["form_win_rate"] = grp["win"].transform(
+        lambda x: x.shift(1).ewm(span=n, min_periods=1).mean()
+    )
 
     form = long.drop_duplicates(subset=["team", "date"], keep="last")[
         ["team", "date", "form_scored", "form_conceded", "form_win_rate"]]
 
     df = df.merge(form, left_on=["home_team", "date"], right_on=["team", "date"], how="left")
-    df.rename(columns={"form_scored": "home_form_scored", "form_conceded": "home_form_conceded",
-                        "form_win_rate": "home_form_win_rate"}, inplace=True)
+    df.rename(columns={
+        "form_scored": "home_form_scored",
+        "form_conceded": "home_form_conceded",
+        "form_win_rate": "home_form_win_rate",
+    }, inplace=True)
     df.drop(columns=["team"], inplace=True)
 
     df = df.merge(form, left_on=["away_team", "date"], right_on=["team", "date"], how="left")
-    df.rename(columns={"form_scored": "away_form_scored", "form_conceded": "away_form_conceded",
-                        "form_win_rate": "away_form_win_rate"}, inplace=True)
+    df.rename(columns={
+        "form_scored": "away_form_scored",
+        "form_conceded": "away_form_conceded",
+        "form_win_rate": "away_form_win_rate",
+    }, inplace=True)
     df.drop(columns=["team"], inplace=True)
+
     return df
 
 def compute_h2h(df: pd.DataFrame) -> pd.DataFrame:
